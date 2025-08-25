@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtiMeow AI Life Logger</title>
+    <link rel="stylesheet" href="lib/fontawesome/fa-icons.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="lib/highlight/github.min.css">
+    <link rel="stylesheet" href="lib/highlight/github-dark.min.css" media="(prefers-color-scheme: dark)">
+</head>
+<body class="theme-system">
+    <!-- 自定义标题栏 -->
+    <div class="titlebar" id="titlebar">
+        <div class="titlebar-drag-region"></div>
+        <div class="titlebar-left">
+            <div class="app-icon">
+                <img src="../assets/icon.png" alt="ArtiMeow" class="icon-image">
+                <div class="icon-glow"></div>
+            </div>
+            <div class="app-title">
+                <span class="title-main">ArtiMeow</span>
+                <span class="title-sub">AI Life Logger</span>
+            </div>
+        </div>
+        <div class="titlebar-center" id="titlebarStatus">
+            <!-- 状态区域 -->
+        </div>
+        <div class="titlebar-right">
+            <button class="titlebar-btn minimize" id="btnMin" title="最小化">
+                <svg width="12" height="12" viewBox="0 0 12 12">
+                    <rect x="2" y="5.5" width="8" height="1" fill="currentColor"/>
+                </svg>
+            </button>
+            <button class="titlebar-btn maximize" id="btnMax" title="最大化">
+                <svg width="12" height="12" viewBox="0 0 12 12">
+                    <rect x="2" y="2" width="8" height="8" stroke="currentColor" stroke-width="1" fill="none"/>
+                </svg>
+            </button>
+            <button class="titlebar-btn close" id="btnClose" title="关闭">
+                <svg width="12" height="12" viewBox="0 0 12 12">
+                    <path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="quick-actions">
+                    <button class="action-btn primary" id="newEntryBtn" title="新建记录 (Ctrl+N)">
+                        <i class="fas fa-plus"></i>
+                        <span>新建记录</span>
+                    </button>
+                </div>
+                <div class="search-section">
+                    <div class="search-box">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16">
+                            <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M10 10L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="搜索记录..." class="search-input">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="filter-section">
+                    <div class="date-filter">
+                        <input type="date" id="dateFilter" class="date-input">
+                        <button class="filter-btn" id="todayBtn">今天</button>
+                        <button class="filter-btn" id="showAllBtn">显示全部</button>
+                    </div>
+                </div>
+                
+                <div class="entries-section">
+                    <div class="section-header">
+                        <h3 class="section-title">记录列表</h3>
+                        <span class="entries-count" id="entriesCount">0 条记录</span>
+                    </div>
+                    <div class="entries-list" id="entriesList">
+                        <!-- 历史记录列表 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="footer-actions">
+                    <button class="footer-btn" id="settingsBtn" title="设置">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="theme-toggle-container">
+                        <button class="footer-btn" id="themeToggleBtn" title="选择主题 (Ctrl+T)">
+                            <i class="fas fa-adjust"></i>
+                        </button>
+                        <div class="theme-selector" id="themeSelector">
+                            <div class="theme-option" data-theme="light">
+                                <div class="theme-icon light"></div>
+                                <span>浅色主题</span>
+                            </div>
+                            <div class="theme-option" data-theme="dark">
+                                <div class="theme-icon dark"></div>
+                                <span>深色主题</span>
+                            </div>
+                            <div class="theme-option active" data-theme="system">
+                                <div class="theme-icon system"></div>
+                                <span>跟随系统</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="entry-header">
+                    <div class="entry-title-section">
+                        <input type="text" id="entryTitle" placeholder="请输入标题..." class="entry-title-input">
+                        <div class="entry-metadata">
+                            <div class="metadata-item">
+                                <svg width="14" height="14" viewBox="0 0 14 14">
+                                    <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1" fill="none"/>
+                                    <path d="M7 3V7L10 10" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                                </svg>
+                                <span id="entryDate"></span>
+                            </div>
+                            <div class="metadata-item">
+                                <svg width="14" height="14" viewBox="0 0 14 14">
+                                    <path d="M2 3H12L11 11H3L2 3ZM2 3L1.5 1H0" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                                <span class="word-count" id="wordCount">0 字</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry-actions">
+                        <button class="action-btn secondary" id="aiAssistBtn" title="AI 助手">
+                            <i class="fas fa-robot"></i>
+                            <span>AI助手</span>
+                        </button>
+                        <button class="action-btn primary" id="saveBtn" title="保存 (Ctrl+S)">
+                            <i class="fas fa-save"></i>
+                            <span>保存</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="editor-container">
+                <div class="editor-tabs">
+                    <button class="tab-btn active" data-tab="split">分屏</button>
+                    <button class="tab-btn" data-tab="editor">编辑</button>
+                    <button class="tab-btn" data-tab="preview">预览</button>
+                    <button class="tab-btn" data-tab="aiworkspace">AI 工作台</button>
+                </div>
+                
+                <div class="editor-content">
+                    <div class="editor-pane active" id="editorPane">
+                        <!-- Markdown 工具栏 -->
+                        <div class="markdown-toolbar" id="markdownToolbar">
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-action="bold" title="粗体 (Ctrl+B)">
+                                    <i class="fas fa-bold"></i>
+                                </button>
+                                <button class="toolbar-btn" data-action="italic" title="斜体 (Ctrl+I)">
+                                    <i class="fas fa-italic"></i>
+                                </button>
+                                <button class="toolbar-btn" data-action="strikethrough" title="删除线">
+                                    <i class="fas fa-strikethrough"></i>
+                                </button>
+                            </div>
+                            <div class="toolbar-separator"></div>
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-action="h1" title="标题1"><i class="fas fa-heading"></i>1</button>
+                                <button class="toolbar-btn" data-action="h2" title="标题2"><i class="fas fa-heading"></i>2</button>
+                                <button class="toolbar-btn" data-action="h3" title="标题3"><i class="fas fa-heading"></i>3</button>
+                            </div>
+                            <div class="toolbar-separator"></div>
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-action="ul" title="无序列表"><i class="fas fa-list-ul"></i></button>
+                                <button class="toolbar-btn" data-action="ol" title="有序列表"><i class="fas fa-list-ol"></i></button>
+                                <button class="toolbar-btn" data-action="quote" title="引用"><i class="fas fa-quote-right"></i></button>
+                            </div>
+                            <div class="toolbar-separator"></div>
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-action="code" title="行内代码"><i class="fas fa-code"></i></button>
+                                <button class="toolbar-btn" data-action="codeblock" title="代码块"><i class="fas fa-file-code"></i></button>
+                                <button class="toolbar-btn" data-action="link" title="链接"><i class="fas fa-link"></i></button>
+                                <button class="toolbar-btn" data-action="image" title="图片"><i class="fas fa-image"></i></button>
+                            </div>
+                            <div class="toolbar-separator"></div>
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-action="table" title="表格"><i class="fas fa-table"></i></button>
+                                <button class="toolbar-btn" data-action="mermaid" title="Mermaid图表"><i class="fas fa-project-diagram"></i></button>
+                                <button class="toolbar-btn" data-action="hr" title="分割线"><i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <textarea id="markdownEditor" placeholder="在这里记录您的工作、计划、灵感和创想...
+
+支持 Markdown 语法：
+- **粗体文本**
+- *斜体文本*
+- `代码`
+- [链接](URL)
+- ![图片](URL)
+
+使用 ```mermaid 创建流程图：
+```mermaid
+graph TD
+    A[开始] --> B[计划]
+    B --> C[执行]
+    C --> D[总结]
+```
+
+AI 助手可以帮助您：
+- 整理和总结记录
+- 制定工作计划
+- 创建思维导图
+- 生成 Mermaid 流程图"></textarea>
+                    </div>
+                    
+                    <div class="preview-pane" id="previewPane">
+                        <div class="preview-content" id="previewContent">
+                            <p class="preview-placeholder">在左侧编辑器中输入内容，预览将在这里显示...</p>
+                        </div>
+                    </div>
+                    <!-- AI 工作台面板 -->
+                    <div class="ai-workspace-pane" id="aiWorkspacePane">
+                        <div class="ai-workspace-header">
+                            <div class="ai-work-actions">
+                                <button id="btnGenDailySummary" class="btn-small">生成今日整理</button>
+                                <button id="btnGenWeeklySummary" class="btn-small">一键生成周总结 & 计划</button>
+                                <button id="btnInsertMermaid" class="btn-small">智能生成 Mermaid 图</button>
+                            </div>
+                            <div class="ai-work-status" id="aiWorkStatus" style="display: none;">
+                                <div class="working-indicator">
+                                    <div class="spinner"></div>
+                                    <span class="status-text">AI正在工作中...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-workspace-content">
+                            <div class="ai-workspace-sections">
+                                <div class="ai-work-section">
+                                    <h4>今日完成</h4>
+                                    <textarea id="aiDailyDone" placeholder="记录今日已完成的工作..." rows="4"></textarea>
+                                </div>
+                                <div class="ai-work-section">
+                                    <h4>明日/后续计划</h4>
+                                    <textarea id="aiDailyPlan" placeholder="计划明日要做的事项..." rows="4"></textarea>
+                                </div>
+                                <div class="ai-work-section">
+                                    <h4>灵感 / 创意</h4>
+                                    <textarea id="aiIdeas" placeholder="捕捉灵感与创意..." rows="4"></textarea>
+                                </div>
+                                <div class="ai-work-section">
+                                    <h4>研究 / 探索</h4>
+                                    <textarea id="aiResearch" placeholder="记录需要调研或探索的问题..." rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="ai-work-output" id="aiWorkspaceOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AI 助手对话框 -->
+    <div class="ai-dialog" id="aiDialog">
+        <div class="ai-dialog-header">
+            <h3>🤖 AI 助手 <span class="ai-status" id="aiStatus">空闲</span></h3>
+            <button class="btn-close" id="closeAiDialog">×</button>
+        </div>
+        <div class="ai-dialog-content">
+            <div class="ai-chat" id="aiChat">
+                <div class="ai-message system">
+                    <div class="message-content">
+                        您好！我是您的AI生活助理。我可以帮助您：
+                        <ul>
+                            <li>整理和总结今天的工作记录</li>
+                            <li>制定明天或本周的工作计划</li>
+                            <li>将您的想法转换为结构化的内容</li>
+                            <li>创建 Mermaid 流程图和思维导图</li>
+                        </ul>
+                        请告诉我您需要什么帮助！
+                    </div>
+                </div>
+            </div>
+            <div class="ai-input-area">
+                <textarea id="aiInput" placeholder="请输入您的需求..." rows="3"></textarea>
+                <div class="ai-actions">
+                    <button class="btn-ai-send" id="aiSendBtn">发送</button>
+                    <button class="btn-ai-clear" id="aiClearBtn">清空对话</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑器右键菜单 -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" data-action="cut">剪切</div>
+        <div class="context-menu-item" data-action="copy">复制</div>
+        <div class="context-menu-item" data-action="paste">粘贴</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="selectAll">全选</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="aiAssist">AI 助手优化</div>
+    </div>
+    <!-- 记录列表右键菜单 -->
+    <div class="context-menu" id="entryContextMenu">
+        <div class="context-menu-item" data-action="renameEntry">
+            <i class="fas fa-edit"></i> 重命名
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="exportToPDF">
+            <i class="fas fa-file-pdf"></i> 导出为PDF或打印
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="deleteEntry">
+            <i class="fas fa-trash"></i> 删除
+        </div>
+    </div>
+    <!-- 设置模态 -->
+    <div class="settings-modal" id="settingsModal" style="display:none;">
+        <div class="settings-backdrop" id="settingsBackdrop"></div>
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h2>设置 & 关于</h2>
+                <button class="btn-close" id="closeSettingsModal">×</button>
+            </div>
+                <div class="settings-tabs">
+                <button class="settings-tab-btn active" data-tab="ai">AI 配置</button>
+                <button class="settings-tab-btn" data-tab="appearance">外观</button>
+                <button class="settings-tab-btn" data-tab="about">关于</button>
+            </div>
+            <div class="settings-content-scroll">
+                <div class="settings-tab active" id="aiTab"> <!-- AI 配置内容 (迁移自原 settings.html) -->
+                    <div class="settings-section">
+                        <h3>AI 服务配置</h3>
+                        <div class="setting-group">
+                            <label class="setting-label">AI 服务类型</label>
+                            <select id="aiProvider" class="setting-select">
+                                <option value="ollama">Ollama (本地)</option>
+                                <option value="openai">OpenAI API</option>
+                                <option value="custom">自定义 API</option>
+                            </select>
+                        </div>
+                        <div class="ai-config ollama-config">
+                            <div class="setting-group">
+                                <label class="setting-label">Ollama 地址</label>
+                                <input type="text" id="ollamaUrl" class="setting-input" placeholder="http://localhost:11434" value="http://localhost:11434">
+                            </div>
+                            <div class="setting-group">
+                                <label class="setting-label">模型名称</label>
+                                <input type="text" id="ollamaModel" class="setting-input" placeholder="llama2" value="llama2">
+                            </div>
+                            <button class="btn-test" id="testOllamaBtn">测试连接</button>
+                        </div>
+                        <div class="ai-config openai-config" style="display:none;">
+                            <div class="setting-group">
+                                <label class="setting-label">API 地址</label>
+                                <input type="text" id="openaiUrl" class="setting-input" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                            </div>
+                            <div class="setting-group">
+                                <label class="setting-label">API Key</label>
+                                <input type="password" id="openaiKey" class="setting-input" placeholder="sk-...">
+                            </div>
+                            <div class="setting-group">
+                                <label class="setting-label">模型名称</label>
+                                <input type="text" id="openaiModel" class="setting-input" placeholder="gpt-3.5-turbo" value="gpt-3.5-turbo">
+                            </div>
+                            <button class="btn-test" id="testOpenaiBtn">测试连接</button>
+                        </div>
+                        <div class="ai-config custom-config" style="display:none;">
+                            <div class="setting-group">
+                                <label class="setting-label">API 地址</label>
+                                <input type="text" id="customUrl" class="setting-input" placeholder="https://your-api.com/v1">
+                            </div>
+                            <div class="setting-group">
+                                <label class="setting-label">API Key</label>
+                                <input type="password" id="customKey" class="setting-input" placeholder="your-api-key">
+                            </div>
+                            <div class="setting-group">
+                                <label class="setting-label">模型名称</label>
+                                <input type="text" id="customModel" class="setting-input" placeholder="model-name">
+                            </div>
+                            <button class="btn-test" id="testCustomBtn">测试连接</button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>AI 行为设置</h3>
+                        <div class="setting-group">
+                            <label class="setting-label"><input type="checkbox" id="autoSummary" checked> 自动生成每日总结</label>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label"><input type="checkbox" id="weeklyPlanning" checked> 自动生成每周计划</label>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label"><input type="checkbox" id="mermaidSuggestion" checked> 智能建议 Mermaid 图表</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-tab" id="appearanceTab">
+                    <div class="settings-section">
+                        <h3>主题设置</h3>
+                        <div class="setting-group">
+                            <label class="setting-label">主题模式</label>
+                            <select id="themeSelect" class="setting-select">
+                                <option value="system">跟随系统</option>
+                                <option value="light">浅色模式</option>
+                                <option value="dark">深色模式</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>编辑器设置</h3>
+                        <div class="setting-group">
+                            <label class="setting-label">字体大小</label>
+                            <select id="fontSize" class="setting-select">
+                                <option value="12">12px</option>
+                                <option value="14" selected>14px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="20">20px</option>
+                            </select>
+                        </div>
+                        <div class="setting-group"><label class="setting-label"><input type="checkbox" id="lineNumbers" checked> 显示行号</label></div>
+                        <div class="setting-group"><label class="setting-label"><input type="checkbox" id="wordWrap" checked> 自动换行</label></div>
+                    </div>
+                </div>
+                <div class="settings-tab" id="aboutTab">
+                    <div class="about-section">
+                        <div class="about-header"><div class="about-icon"><img src="../assets/icon.png" alt="ArtiMeow" class="about-icon-image"></div><div class="about-title"><h2 id="appName">ArtiMeow AI Life Logger</h2><p id="appVersion">版本 1.0.0</p></div></div>
+                        <div class="system-info"><h3>系统信息</h3><div class="info-grid">
+                            <div class="info-item"><label>平台:</label><span id="platformInfo">-</span></div>
+                            <div class="info-item"><label>架构:</label><span id="archInfo">-</span></div>
+                            <div class="info-item"><label>Node.js版本:</label><span id="nodeVersion">-</span></div>
+                            <div class="info-item"><label>Electron版本:</label><span id="electronVersion">-</span></div>
+                            <div class="info-item"><label>打包状态:</label><span id="packaged">-</span></div>
+                            <div class="info-item"><label>执行路径:</label><span id="execPath">-</span></div>
+                        </div></div>
+                        <div class="developer-info"><h3>开发者信息</h3><div class="info-grid">
+                            <div class="info-item"><label>开发者:</label><span>B5-Software</span></div>
+                            <div class="info-item"><label>GitHub:</label><a href="#" id="githubLink" class="external-link">B5-Software/ArtiMeow-AILifeLogger</a></div>
+                            <div class="info-item"><label>许可证:</label><span id="licenseInfo">B5-Software Free and Open Knowledge Public License Version 1.0-Permissive</span></div>
+                        </div></div>
+                        <div class="about-actions"><button class="btn-refresh" id="refreshInfoBtn">刷新版本信息</button><button class="btn-github" id="openGithubBtn">访问 GitHub</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button class="btn-save" id="saveSettingsBtn">保存设置</button>
+                <button class="btn-cancel" id="cancelSettingsBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载指示器 -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">AI 正在思考中...</div>
+    </div>
+    
+    <script src="lib/marked/marked.min.js"></script>
+    <script src="lib/highlight/highlight.min.js"></script>
+    <script src="lib/mermaid/mermaid.min.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/settings-fixed.js"></script>
+    <script src="scripts/themes.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/ai-assistant.js"></script>
+    <script>
+        // 标题栏窗口控制
+        const { ipcRenderer } = require('electron');
+        document.getElementById('btnMin').addEventListener('click', ()=> ipcRenderer.send('window-control','minimize'));
+        document.getElementById('btnMax').addEventListener('click', ()=> ipcRenderer.send('window-control','maximize'));
+        document.getElementById('btnClose').addEventListener('click', ()=> ipcRenderer.send('window-control','close'));
+        ipcRenderer.on('window-maximize-changed', (_, isMax)=>{
+            const maxBtn = document.getElementById('btnMax');
+            const svg = maxBtn.querySelector('svg');
+            if (isMax) {
+                svg.innerHTML = '<rect x="2" y="3" width="6" height="6" stroke="currentColor" stroke-width="1" fill="none"/><rect x="4" y="1" width="6" height="6" stroke="currentColor" stroke-width="1" fill="none"/>';
+            } else {
+                svg.innerHTML = '<rect x="2" y="2" width="8" height="8" stroke="currentColor" stroke-width="1" fill="none"/>';
+            }
+        });
+    </script>
+</body>
+</html>

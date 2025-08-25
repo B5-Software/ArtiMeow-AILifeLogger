@@ -1,0 +1,409 @@
+/* 设置页面特有样式 */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--main-bg);
+    color: var(--text-color);
+}
+
+.settings-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--header-bg);
+}
+
+.settings-header h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.settings-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.settings-tabs {
+    display: flex;
+    background: var(--tab-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 30px;
+}
+
+.settings-tabs .tab-btn {
+    padding: 15px 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.settings-tabs .tab-btn:hover {
+    color: var(--text-color);
+    background: var(--hover-bg);
+}
+
+.settings-tabs .tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.settings-tab {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    display: none;
+}
+
+.settings-tab.active {
+    display: block;
+}
+
+.settings-section {
+    margin-bottom: 40px;
+}
+
+.settings-section h3 {
+    margin: 0 0 20px 0;
+    color: var(--text-color);
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.setting-label input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.setting-input,
+.setting-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.setting-input:focus,
+.setting-select:focus {
+    border-color: var(--primary-color);
+}
+
+.setting-input[type="password"] {
+    font-family: monospace;
+}
+
+.ai-config {
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.btn-test {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-test:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-test:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 关于页面样式 */
+.about-section {
+    max-width: 500px;
+}
+
+.about-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.about-icon {
+    font-size: 48px;
+    margin-right: 20px;
+}
+
+.about-title h2 {
+    margin: 0 0 5px 0;
+    color: var(--text-color);
+    font-size: 20px;
+}
+
+.about-title p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.system-info,
+.developer-info {
+    margin-bottom: 30px;
+}
+
+.system-info h3,
+.developer-info h3 {
+    margin: 0 0 15px 0;
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 13px;
+    min-width: 100px;
+}
+
+.info-item span {
+    color: var(--text-color);
+    font-size: 13px;
+    font-family: monospace;
+    text-align: right;
+    word-break: break-all;
+}
+
+.external-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.external-link:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.about-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-refresh,
+.btn-github {
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-refresh {
+    background: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+.btn-refresh:hover {
+    background: var(--hover-bg);
+    transform: translateY(-1px);
+}
+
+.btn-github {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-github:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* 设置页面底部 */
+.settings-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--border-color);
+    background: var(--header-bg);
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 12px 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-save {
+    background: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+}
+
+.btn-save:hover {
+    background: var(--success-hover);
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    background: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+.btn-cancel:hover {
+    background: var(--hover-bg);
+    transform: translateY(-1px);
+}
+
+/* 状态指示器 */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-indicator.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.status-indicator.error {
+    background: var(--danger-color);
+    color: white;
+}
+
+.status-indicator.warning {
+    background: var(--warning-color);
+    color: white;
+}
+
+.status-indicator.info {
+    background: var(--info-color);
+    color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .settings-container {
+        font-size: 13px;
+    }
+    
+    .settings-header,
+    .settings-footer {
+        padding: 15px 20px;
+    }
+    
+    .settings-tab {
+        padding: 20px;
+    }
+    
+    .settings-tabs {
+        padding: 0 20px;
+    }
+    
+    .about-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .about-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .info-item span {
+        text-align: left;
+    }
+    
+    .settings-footer {
+        flex-direction: column;
+    }
+    
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+    }
+}

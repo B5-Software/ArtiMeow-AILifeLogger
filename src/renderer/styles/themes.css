@@ -1,0 +1,338 @@
+/* 主题变量定义 */
+:root {
+    /* 粉色主题 */
+    --primary-color: #e91e63;
+    --primary-hover: #c2185b;
+    --primary-bg: rgba(233, 30, 99, 0.1);
+    
+    --secondary-bg: #fce4ec;
+    --secondary-color: #ad1457;
+    
+    --success-color: #4caf50;
+    --success-hover: #43a047;
+    --success-bg: rgba(76, 175, 80, 0.1);
+    
+    --warning-color: #ff9800;
+    --warning-hover: #f57c00;
+    --warning-bg: rgba(255, 152, 0, 0.1);
+    
+    --danger-color: #f44336;
+    --danger-hover: #d32f2f;
+    --danger-bg: rgba(244, 67, 54, 0.1);
+    
+    --info-color: #e91e63;
+    --info-bg: rgba(233, 30, 99, 0.1);
+    
+    --ai-color: #e91e63;
+    --ai-hover: #c2185b;
+    
+    /* 背景色 - 粉色系 */
+    --main-bg: #fff8fa;
+    --sidebar-bg: #fce4ec;
+    --sidebar-footer-bg: #f8bbd9;
+    --header-bg: #fff8fa;
+    --header-gradient: #fce4ec;
+    --card-bg: #ffffff;
+    --dialog-bg: #ffffff;
+    --editor-bg: #ffffff;
+    --editor-focus-bg: #fff0f3;
+    --preview-bg: #ffffff;
+    --input-bg: #ffffff;
+    --tab-bg: #fce4ec;
+    --toolbar-bg: #fff8fa;
+    --hover-bg: #f8bbd9;
+    --code-bg: #fce4ec;
+    
+    /* 文字颜色 */
+    --text-color: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    --code-color: #e91e63;
+    
+    /* 边框颜色 */
+    --border-color: #e1e8ed;
+    --border-light: #f8f9fa;
+    
+    /* 滚动条 */
+    --scrollbar-track: #f1f3f4;
+    --scrollbar-thumb: #c1c8cd;
+    --scrollbar-thumb-hover: #a8b1b8;
+}
+
+/* 深色主题 - 粉色系 */
+.theme-dark,
+body.theme-dark {
+    /* 主色调 */
+    --primary-color: #f48fb1;
+    --primary-hover: #e91e63;
+    --primary-bg: rgba(244, 143, 177, 0.15);
+    
+    --secondary-bg: #2d1b2c;
+    --secondary-color: #d1bfd0;
+    
+    --success-color: #66bb6a;
+    --success-hover: #4caf50;
+    --success-bg: rgba(102, 187, 106, 0.15);
+    
+    --warning-color: #ffab40;
+    --warning-hover: #ff9800;
+    --warning-bg: rgba(255, 171, 64, 0.15);
+    
+    --danger-color: #ef5350;
+    --danger-hover: #f44336;
+    --danger-bg: rgba(239, 83, 80, 0.15);
+    
+    --info-color: #f48fb1;
+    --info-bg: rgba(244, 143, 177, 0.15);
+    
+    --ai-color: #f48fb1;
+    --ai-hover: #e91e63;
+    
+    /* 背景色 */
+    --main-bg: #1a0e1a;
+    --sidebar-bg: #2d1b2c;
+    --sidebar-footer-bg: #251825;
+    --header-bg: #2d1b2c;
+    --header-gradient: #382838;
+    --card-bg: #2d1b2c;
+    --dialog-bg: #2d1b2c;
+    --editor-bg: #1e0e1e;
+    --editor-focus-bg: #251825;
+    --preview-bg: #1e0e1e;
+    --input-bg: #3c2c3c;
+    --tab-bg: #2d1b2c;
+    --toolbar-bg: #2d1b2c;
+    --hover-bg: #3c2c3c;
+    --code-bg: #1e0e1e;
+    
+    /* 文字颜色 */
+    --text-color: #f5e6f3;
+    --text-secondary: #d1bfd0;
+    --text-muted: #9d8d9c;
+    --code-color: #f48fb1;
+    
+    /* 边框颜色 */
+    --border-color: #3c3c3c;
+    --border-light: #2d2d30;
+    
+    /* 滚动条 */
+    --scrollbar-track: #2d2d30;
+    --scrollbar-thumb: #5a5a5a;
+    --scrollbar-thumb-hover: #6c6c6c;
+}
+
+@media (prefers-color-scheme: dark) {
+    body.theme-system {
+        /* 主色调 */
+        --primary-color: #4fc3f7;
+        --primary-hover: #29b6f6;
+        --primary-bg: rgba(79, 195, 247, 0.15);
+        
+        --secondary-bg: #2d3748;
+        --secondary-color: #a0aec0;
+        
+        --success-color: #66bb6a;
+        --success-hover: #4caf50;
+        --success-bg: rgba(102, 187, 106, 0.15);
+        
+        --warning-color: #ffab40;
+        --warning-hover: #ff9800;
+        --warning-bg: rgba(255, 171, 64, 0.15);
+        
+        --danger-color: #ef5350;
+        --danger-hover: #f44336;
+        --danger-bg: rgba(239, 83, 80, 0.15);
+        
+        --info-color: #42a5f5;
+        --info-bg: rgba(66, 165, 245, 0.15);
+        
+        --ai-color: #ba68c8;
+        --ai-hover: #9c27b0;
+        
+        /* 背景色 */
+        --main-bg: #1a1a1a;
+        --sidebar-bg: #2d2d30;
+        --sidebar-footer-bg: #252526;
+        --header-bg: #2d2d30;
+        --header-gradient: #383838;
+        --card-bg: #2d2d30;
+        --dialog-bg: #2d2d30;
+        --editor-bg: #1e1e1e;
+        --editor-focus-bg: #252526;
+        --preview-bg: #1e1e1e;
+        --input-bg: #3c3c3c;
+        --tab-bg: #2d2d30;
+        --toolbar-bg: #2d2d30;
+        --hover-bg: #3c3c3c;
+        --code-bg: #1e1e1e;
+        
+        /* 文字颜色 */
+        --text-color: #cccccc;
+        --text-secondary: #9d9d9d;
+        --code-color: #f92672;
+        
+        /* 边框颜色 */
+        --border-color: #3c3c3c;
+        --border-light: #2d2d30;
+        
+        /* 滚动条 */
+        --scrollbar-track: #2d2d30;
+        --scrollbar-thumb: #5a5a5a;
+        --scrollbar-thumb-hover: #6c6c6c;
+    }
+}
+
+/* 强制浅色主题 */
+.theme-light {
+    --primary-color: #4fc3f7;
+    --primary-hover: #29b6f6;
+    --primary-bg: rgba(79, 195, 247, 0.1);
+    
+    --secondary-bg: #f8f9fa;
+    --secondary-color: #6c757d;
+    
+    --success-color: #4caf50;
+    --success-hover: #43a047;
+    --success-bg: rgba(76, 175, 80, 0.1);
+    
+    --warning-color: #ff9800;
+    --warning-hover: #f57c00;
+    --warning-bg: rgba(255, 152, 0, 0.1);
+    
+    --danger-color: #f44336;
+    --danger-hover: #d32f2f;
+    --danger-bg: rgba(244, 67, 54, 0.1);
+    
+    --info-color: #2196f3;
+    --info-bg: rgba(33, 150, 243, 0.1);
+    
+    --ai-color: #9c27b0;
+    --ai-hover: #7b1fa2;
+    
+    /* 背景色 */
+    --main-bg: #ffffff;
+    --sidebar-bg: #fafbfc;
+    --sidebar-footer-bg: #f5f6f7;
+    --header-bg: #ffffff;
+    --header-gradient: #f8f9fa;
+    --card-bg: #ffffff;
+    --dialog-bg: #ffffff;
+    --editor-bg: #ffffff;
+    --editor-focus-bg: #fafbfc;
+    --preview-bg: #ffffff;
+    --input-bg: #ffffff;
+    --tab-bg: #f8f9fa;
+    --toolbar-bg: #ffffff;
+    --hover-bg: #f5f6f7;
+    --code-bg: #f8f9fa;
+    
+    /* 文字颜色 */
+    --text-color: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    --code-color: #e91e63;
+    
+    /* 边框颜色 */
+    --border-color: #e1e8ed;
+    --border-light: #f8f9fa;
+    
+    /* 滚动条 */
+    --scrollbar-track: #f1f3f4;
+    --scrollbar-thumb: #c1c8cd;
+    --scrollbar-thumb-hover: #a8b1b8;
+}
+
+/* 主题切换动画 */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 主题图标 */
+.theme-icon {
+    transition: transform 0.3s ease;
+}
+
+.theme-dark .theme-icon::before {
+    content: '☀️';
+}
+
+.theme-light .theme-icon::before {
+    content: '🌙';
+}
+
+.theme-system .theme-icon::before {
+    content: '🔄';
+}
+
+/* 高对比度支持 */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #000000;
+        --text-color: #000000;
+        --text-secondary: #333333;
+    }
+    
+    .theme-dark {
+        --border-color: #ffffff;
+        --text-color: #ffffff;
+        --text-secondary: #cccccc;
+    }
+}
+
+/* 减少动画支持 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 焦点样式 */
+*:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* 选择文本样式 */
+::selection {
+    background: var(--primary-bg);
+    color: var(--primary-color);
+}
+
+/* 代码高亮主题适配 */
+.theme-dark .hljs {
+    background: var(--code-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* 深色模式预览区域字体颜色修复 */
+.theme-dark .preview-content,
+.theme-dark .preview-content p,
+.theme-dark .preview-content h1,
+.theme-dark .preview-content h2,
+.theme-dark .preview-content h3,
+.theme-dark .preview-content h4,
+.theme-dark .preview-content h5,
+.theme-dark .preview-content h6,
+.theme-dark .preview-content li,
+.theme-dark .preview-content td,
+.theme-dark .preview-content th,
+.theme-dark .preview-content blockquote,
+.theme-dark .preview-content div {
+    color: var(--text-color) !important;
+}
+
+.theme-dark .preview-content a {
+    color: var(--primary-color) !important;
+}
+
+.theme-dark .preview-content code {
+    color: var(--code-color) !important;
+    background: var(--code-bg) !important;
+}
+
+.theme-light .hljs {
+    background: var(--code-bg) !important;
+    color: var(--text-color) !important;
+}

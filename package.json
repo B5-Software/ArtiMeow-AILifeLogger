@@ -1,0 +1,72 @@
+{
+  "name": "artimeow-ailifelogger",
+  "version": "1.0.0",
+  "description": "ArtiMeow AI Life Logger - Your intelligent life and work assistant",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "dist": "electron-builder --publish=never",
+    "clean": "rimraf dist",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "ai",
+    "life-logger",
+    "assistant",
+    "electron",
+    "productivity",
+    "ollama",
+    "openai"
+  ],
+  "author": {
+    "name": "B5-Software",
+    "url": "https://github.com/B5-Software"
+  },
+  "license": "B5-Software Free and Open Knowledge Public License Version 1.0-Permissive",
+  "homepage": "https://github.com/B5-Software/ArtiMeow-AILifeLogger",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/B5-Software/ArtiMeow-AILifeLogger.git"
+  },
+  "build": {
+    "appId": "com.b5software.artimeow-ailifelogger",
+    "productName": "ArtiMeow AI Life Logger",
+    "icon": "src/assets/icon",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ArtiMeow AI Life Logger"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "devDependencies": {
+    "electron": "^37.3.1",
+    "electron-builder": "^26.0.12",
+    "rimraf": "^6.0.1"
+  }
+}

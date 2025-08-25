@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置 - ArtiMeow AI Life Logger</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="styles/settings.css">
+</head>
+<body class="theme-system">
+    <div class="settings-container">
+        <div class="settings-header">
+            <h2>设置</h2>
+        </div>
+        
+        <div class="settings-content">
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="ai">AI 配置</button>
+                <button class="tab-btn" data-tab="appearance">外观</button>
+                <button class="tab-btn" data-tab="about">关于</button>
+            </div>
+            
+            <!-- AI 配置选项卡 -->
+            <div class="settings-tab active" id="aiTab">
+                <div class="settings-section">
+                    <h3>AI 服务配置</h3>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label">AI 服务类型</label>
+                        <select id="aiProvider" class="setting-select">
+                            <option value="ollama">Ollama (本地)</option>
+                            <option value="openai">OpenAI API</option>
+                            <option value="custom">自定义 API</option>
+                        </select>
+                    </div>
+                    
+                    <div class="ai-config ollama-config">
+                        <div class="setting-group">
+                            <label class="setting-label">Ollama 地址</label>
+                            <input type="text" id="ollamaUrl" class="setting-input" placeholder="http://localhost:11434" value="http://localhost:11434">
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">模型名称</label>
+                            <input type="text" id="ollamaModel" class="setting-input" placeholder="llama2" value="llama2">
+                        </div>
+                        <button class="btn-test" id="testOllamaBtn">测试连接</button>
+                    </div>
+                    
+                    <div class="ai-config openai-config" style="display: none;">
+                        <div class="setting-group">
+                            <label class="setting-label">API 地址</label>
+                            <input type="text" id="openaiUrl" class="setting-input" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">API Key</label>
+                            <input type="password" id="openaiKey" class="setting-input" placeholder="sk-...">
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">模型名称</label>
+                            <input type="text" id="openaiModel" class="setting-input" placeholder="gpt-3.5-turbo" value="gpt-3.5-turbo">
+                        </div>
+                        <button class="btn-test" id="testOpenaiBtn">测试连接</button>
+                    </div>
+                    
+                    <div class="ai-config custom-config" style="display: none;">
+                        <div class="setting-group">
+                            <label class="setting-label">API 地址</label>
+                            <input type="text" id="customUrl" class="setting-input" placeholder="https://your-api.com/v1">
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">API Key</label>
+                            <input type="password" id="customKey" class="setting-input" placeholder="your-api-key">
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">模型名称</label>
+                            <input type="text" id="customModel" class="setting-input" placeholder="model-name">
+                        </div>
+                        <button class="btn-test" id="testCustomBtn">测试连接</button>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>AI 行为设置</h3>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <input type="checkbox" id="autoSummary" checked>
+                            自动生成每日总结
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <input type="checkbox" id="weeklyPlanning" checked>
+                            自动生成每周计划
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <input type="checkbox" id="mermaidSuggestion" checked>
+                            智能建议 Mermaid 图表
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 外观选项卡 -->
+            <div class="settings-tab" id="appearanceTab">
+                <div class="settings-section">
+                    <h3>主题设置</h3>
+                    <div class="setting-group">
+                        <label class="setting-label">主题模式</label>
+                        <select id="themeSelect" class="setting-select">
+                            <option value="system">跟随系统</option>
+                            <option value="light">浅色模式</option>
+                            <option value="dark">深色模式</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>编辑器设置</h3>
+                    <div class="setting-group">
+                        <label class="setting-label">字体大小</label>
+                        <select id="fontSize" class="setting-select">
+                            <option value="12">12px</option>
+                            <option value="14" selected>14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <input type="checkbox" id="lineNumbers" checked>
+                            显示行号
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <input type="checkbox" id="wordWrap" checked>
+                            自动换行
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关于选项卡 -->
+            <div class="settings-tab" id="aboutTab">
+                <div class="about-section">
+                    <div class="about-header">
+                        <div class="about-icon">🐱</div>
+                        <div class="about-title">
+                            <h2 id="appName">ArtiMeow AI Life Logger</h2>
+                            <p id="appVersion">版本 1.0.0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="system-info">
+                        <h3>系统信息</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>平台:</label>
+                                <span id="platformInfo">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>架构:</label>
+                                <span id="archInfo">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Node.js版本:</label>
+                                <span id="nodeVersion">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Electron版本:</label>
+                                <span id="electronVersion">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>打包状态:</label>
+                                <span id="packaged">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>执行路径:</label>
+                                <span id="execPath">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="developer-info">
+                        <h3>开发者信息</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>开发者:</label>
+                                <span>B5-Software</span>
+                            </div>
+                            <div class="info-item">
+                                <label>GitHub:</label>
+                                <a href="#" id="githubLink" class="external-link">B5-Software/ArtiMeow-AILifeLogger</a>
+                            </div>
+                            <div class="info-item">
+                                <label>许可证:</label>
+                                <span id="licenseInfo">B5-Software Free and Open Knowledge Public License Version 1.0-Permissive</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-actions">
+                        <button class="btn-refresh" id="refreshInfoBtn">刷新版本信息</button>
+                        <button class="btn-github" id="openGithubBtn">访问 GitHub</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-footer">
+            <button class="btn-save" id="saveSettingsBtn">保存设置</button>
+            <button class="btn-cancel" id="cancelSettingsBtn">取消</button>
+        </div>
+    </div>
+    
+    <script src="scripts/settings.js"></script>
+</body>
+</html>
