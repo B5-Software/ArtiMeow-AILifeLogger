@@ -1,6 +1,6 @@
 {
   "name": "artimeow-ailifelogger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ArtiMeow AI Life Logger - Your intelligent life and work assistant",
   "main": "src/main.js",
   "scripts": {
