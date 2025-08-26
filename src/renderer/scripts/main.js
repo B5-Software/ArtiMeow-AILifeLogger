@@ -454,6 +454,10 @@ class ArtiMeowApp {
         this.currentEntry.title = title;
         this.currentEntry.content = content;
         this.currentEntry.updated = new Date().toISOString();
+        if (!this.currentEntry.created) {
+            // 旧数据补写 created
+            this.currentEntry.created = this.currentEntry.date || this.currentEntry.updated;
+        }
         
         // 更新或添加到entries数组
         const existingIndex = this.entries.findIndex(entry => entry.id === this.currentEntry.id);
@@ -556,12 +560,13 @@ class ArtiMeowApp {
             div.classList.add('active');
         }
         
-        const date = new Date(entry.updated || entry.date);
+    const rawDate = entry.created || entry.date || entry.updated;
+    const date = new Date(rawDate);
         const preview = this.getTextPreview(entry.content, 100);
         
         div.innerHTML = `
             <div class="entry-title">${this.escapeHtml(entry.title)}</div>
-            <div class="entry-date">${this.formatDate(date)}</div>
+            <div class="entry-date">${isNaN(date) ? this.escapeHtml(rawDate || '') : this.formatDateTime(date)}</div>
             ${preview ? `<div class="entry-preview">${this.escapeHtml(preview)}</div>` : ''}
         `;
         
@@ -605,10 +610,12 @@ class ArtiMeowApp {
     
     // 更新当前日期
     updateCurrentDate() {
-        if (this.currentEntry) {
-            const date = new Date(this.currentEntry.date);
-            this.entryDate.textContent = this.formatDate(date);
-        }
+    if (!this.currentEntry) return;
+    const raw = this.currentEntry.created || this.currentEntry.date || this.currentEntry.updated;
+    if (!raw) { this.entryDate.textContent = ''; return; }
+    if (!this.currentEntry.created) this.currentEntry.created = raw;
+    const d = new Date(this.currentEntry.created);
+    this.entryDate.textContent = isNaN(d) ? raw : this.formatDateTime(d);
     }
     
     // 格式化日期
@@ -626,6 +633,17 @@ class ArtiMeowApp {
         } else {
             return date.toLocaleDateString('zh-CN');
         }
+    }
+
+    // 绝对日期时间格式 (YYYY-MM-DD HH:MM)
+    formatDateTime(date) {
+        if (!(date instanceof Date) || isNaN(date)) return '';
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        const hh = String(date.getHours()).padStart(2, '0');
+        const mm = String(date.getMinutes()).padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}`;
     }
     
     // 设置默认日期为今天
