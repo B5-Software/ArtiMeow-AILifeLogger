@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四象限任务管理 - ArtiMeow</title>
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color, #f8f9fa);
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-color, #333);
+            transition: all 0.3s ease;
+        }
+
+        /* 自定义标题栏 */
+        .custom-titlebar {
+            height: 32px;
+            background: var(--titlebar-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            -webkit-app-region: drag;
+            color: var(--titlebar-text-color, white);
+            font-size: 13px;
+        }
+
+        .titlebar-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .titlebar-controls {
+            display: flex;
+            gap: 8px;
+            -webkit-app-region: no-drag;
+        }
+
+        .titlebar-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: all 0.2s;
+        }
+
+        .titlebar-btn.minimize {
+            background: #ffbd2e;
+        }
+
+        .titlebar-btn.maximize {
+            background: #28ca42;
+        }
+
+        .titlebar-btn.close {
+            background: #ff5f57;
+        }
+
+        .titlebar-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+
+        /* 工具栏 */
+        .toolbar {
+            height: 45px;
+            background: var(--toolbar-bg, white);
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 1px 3px var(--shadow-color, rgba(0, 0, 0, 0.1));
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toolbar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color, #333);
+        }
+
+        .deadline-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .deadline-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .deadline-badge.urgent {
+            background: #e74c3c;
+        }
+
+        .deadline-badge.important {
+            background: #f39c12;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toolbar-btn {
+            background: var(--btn-bg, #f8f9fa);
+            border: 1px solid var(--btn-border, #dee2e6);
+            color: var(--btn-text, #495057);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--btn-bg-hover, #e9ecef);
+            border-color: var(--btn-border-hover, #adb5bd);
+        }
+
+        .toolbar-btn.primary {
+            background: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        .toolbar-btn.primary:hover {
+            background: #0056b3;
+        }
+
+        /* 主容器 */
+        .main-container {
+            height: calc(100vh - 77px); /* 减去标题栏和工具栏高度 */
+            display: flex;
+            background: var(--main-bg, #f8f9fa);
+        }
+
+        /* 四象限容器 */
+        .quadrant-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-color, #dee2e6);
+            padding: 10px;
+        }
+
+        .quadrant {
+            background: var(--card-bg, white);
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.2s;
+        }
+
+        .quadrant:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .quadrant-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+            min-height: 26px;
+        }
+
+        .quadrant-title {
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .quadrant-count {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 11px;
+            color: rgba(0, 0, 0, 0.7);
+            font-weight: normal;
+        }
+
+        .add-task-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            max-width: 26px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .add-task-btn:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .tasks-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .task-item {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .task-item:hover {
+            background: rgba(0, 0, 0, 0.08);
+            transform: translateX(2px);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .task-item.urgent-deadline {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .task-item.approaching-deadline {
+            border-left-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .task-title {
+            font-weight: 500;
+            font-size: 13px;
+            word-wrap: break-word;
+            flex: 1;
+        }
+
+        .task-deadline {
+            font-size: 11px;
+            color: #6c757d;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        .task-deadline.urgent {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .task-deadline.warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .task-description {
+            font-size: 11px;
+            color: rgba(0, 0, 0, 0.6);
+            line-height: 1.4;
+            margin-top: 3px;
+        }
+
+        .task-actions {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+
+        .task-action-btn:hover {
+            background: white;
+        }
+
+        /* 四象限样式 */
+        .quadrant.urgent-important {
+            border-top: 4px solid #e74c3c;
+        }
+
+        .quadrant.urgent-important .quadrant-header {
+            border-bottom-color: #e74c3c;
+        }
+
+        .quadrant.urgent-important .task-item {
+            border-left-color: #e74c3c;
+        }
+
+        .quadrant.important-not-urgent {
+            border-top: 4px solid #f39c12;
+        }
+
+        .quadrant.important-not-urgent .quadrant-header {
+            border-bottom-color: #f39c12;
+        }
+
+        .quadrant.important-not-urgent .task-item {
+            border-left-color: #f39c12;
+        }
+
+        .quadrant.urgent-not-important {
+            border-top: 4px solid #3498db;
+        }
+
+        .quadrant.urgent-not-important .quadrant-header {
+            border-bottom-color: #3498db;
+        }
+
+        .quadrant.urgent-not-important .task-item {
+            border-left-color: #3498db;
+        }
+
+        .quadrant.not-urgent-not-important {
+            border-top: 4px solid #95a5a6;
+        }
+
+        .quadrant.not-urgent-not-important .quadrant-header {
+            border-bottom-color: #95a5a6;
+        }
+
+        .quadrant.not-urgent-not-important .task-item {
+            border-left-color: #95a5a6;
+        }
+
+        /* 任务输入模态框 */
+        .task-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .task-modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 450px;
+            max-width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-modal-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #495057;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        /* 设置面板 */
+        .settings-panel {
+            width: 300px;
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            display: none;
+            flex-direction: column;
+        }
+
+        .settings-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .settings-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group h4 {
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 13px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .setting-control {
+            font-size: 12px;
+        }
+
+        /* 滚动条样式 */
+        .tasks-list::-webkit-scrollbar,
+        .settings-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tasks-list::-webkit-scrollbar-track,
+        .settings-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .tasks-list::-webkit-scrollbar-thumb,
+        .settings-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+
+        .tasks-list::-webkit-scrollbar-thumb:hover,
+        .settings-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            padding: 30px 20px;
+            font-size: 12px;
+        }
+
+        .empty-state-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        /* 通知样式 */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #007acc;
+            z-index: 10000;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            border-left-color: #28a745;
+        }
+
+        .notification.error {
+            border-left-color: #dc3545;
+        }
+
+        .notification.warning {
+            border-left-color: #ffc107;
+        }
+
+        .notification button {
+            background: none;
+            border: none;
+            float: right;
+            margin-left: 8px;
+            cursor: pointer;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .notification button:hover {
+            color: #333;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* 备份恢复对话框样式 */
+        .backup-restore-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 10001;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .restore-dialog h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .restore-dialog select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            background: white;
+        }
+
+        .restore-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .restore-buttons button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .restore-buttons button:first-child {
+            background: white;
+            color: #666;
+        }
+
+        .restore-buttons button:first-child:hover {
+            background: #f5f5f5;
+        }
+
+        .restore-buttons button:last-child {
+            background: #007acc;
+            color: white;
+            border-color: #007acc;
+        }
+
+        .restore-buttons button:last-child:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* 自定义对话框样式 */
+        .custom-dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10002;
+            backdrop-filter: blur(2px);
+        }
+
+        .custom-dialog {
+            background: var(--card-bg, white);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            min-width: 300px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            animation: dialogSlideIn 0.3s ease-out;
+        }
+
+        .dialog-header {
+            padding: 20px 20px 0;
+            border-bottom: none;
+        }
+
+        .dialog-header h3 {
+            margin: 0;
+            color: var(--text-color, #333);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .dialog-body {
+            padding: 15px 20px 20px;
+        }
+
+        .dialog-body p {
+            margin: 0 0 15px;
+            color: var(--text-color, #333);
+            line-height: 1.5;
+        }
+
+        .dialog-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color, #ddd);
+            border-radius: 4px;
+            font-size: 14px;
+            background: var(--input-bg, white);
+            color: var(--text-color, #333);
+            transition: border-color 0.2s;
+        }
+
+        .dialog-input:focus {
+            outline: none;
+            border-color: var(--primary-color, #007acc);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .dialog-footer {
+            padding: 0 20px 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .dialog-footer .btn {
+            min-width: 80px;
+            padding: 8px 16px;
+            border: 1px solid;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .dialog-cancel {
+            background: var(--card-bg, white);
+            color: var(--text-secondary, #666);
+            border-color: var(--border-color, #ddd);
+        }
+
+        .dialog-cancel:hover {
+            background: var(--hover-bg, #f5f5f5);
+            border-color: var(--text-secondary, #999);
+        }
+
+        .dialog-confirm {
+            background: var(--danger-color, #dc3545);
+            color: white;
+            border-color: var(--danger-color, #dc3545);
+        }
+
+        .dialog-confirm:hover {
+            background: var(--danger-hover, #c82333);
+            border-color: var(--danger-hover, #c82333);
+        }
+
+        @keyframes dialogSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 深色主题适配 */
+        .theme-dark .custom-dialog {
+            background: var(--card-bg-dark, #2d3748);
+            border: 1px solid var(--border-color-dark, #4a5568);
+        }
+
+        .theme-dark .dialog-header h3 {
+            color: var(--text-color-dark, #e2e8f0);
+        }
+
+        .theme-dark .dialog-body p {
+            color: var(--text-color-dark, #e2e8f0);
+        }
+
+        .theme-dark .dialog-input {
+            background: var(--input-bg-dark, #374151);
+            border-color: var(--border-color-dark, #4a5568);
+            color: var(--text-color-dark, #e2e8f0);
+        }
+
+        .theme-dark .dialog-cancel {
+            background: var(--card-bg-dark, #374151);
+            color: var(--text-secondary-dark, #9ca3af);
+            border-color: var(--border-color-dark, #4a5568);
+        }
+
+        .theme-dark .dialog-cancel:hover {
+            background: var(--hover-bg-dark, #4a5568);
+        }
+    </style>
+</head>
+<body class="theme-system quadrant-window">
+    <!-- 自定义标题栏 -->
+    <div class="custom-titlebar">
+        <div class="titlebar-title">
+            <span>🎯</span>
+            <span>四象限任务管理</span>
+        </div>
+        <div class="titlebar-controls">
+            <button class="titlebar-btn minimize" onclick="quadrantManager.minimizeWindow()" title="最小化">−</button>
+            <button class="titlebar-btn maximize" onclick="quadrantManager.toggleMaximize()" title="最大化">□</button>
+            <button class="titlebar-btn close" onclick="quadrantManager.closeWindow()" title="关闭">×</button>
+        </div>
+    </div>
+
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="toolbar-title">任务总览</div>
+            <div class="deadline-indicator" id="deadlineIndicator">
+                <!-- 动态显示最紧迫的任务 -->
+            </div>
+        </div>
+        <div class="toolbar-right">
+            <button class="toolbar-btn" onclick="quadrantManager.showUrgentTasks()">⚡ 紧急任务</button>
+            <button class="toolbar-btn" onclick="quadrantManager.refreshTasks()">🔄 刷新</button>
+            <button class="toolbar-btn" onclick="quadrantManager.exportTasks()">📤 导出</button>
+            <button class="toolbar-btn" onclick="quadrantManager.toggleSettings()">⚙️ 设置</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 四象限主区域 -->
+        <div class="quadrant-container">
+            <!-- 第一象限：重要且紧急 -->
+            <div class="quadrant urgent-important">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        🔴 重要且紧急
+                        <span class="quadrant-count" id="count-urgent-important">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="quadrantManager.showAddTaskModal('urgent-important')">+</button>
+                </div>
+                <div class="tasks-list" id="tasks-urgent-important"></div>
+            </div>
+
+            <!-- 第二象限：重要但不紧急 -->
+            <div class="quadrant important-not-urgent">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        🟡 重要但不紧急
+                        <span class="quadrant-count" id="count-important-not-urgent">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="quadrantManager.showAddTaskModal('important-not-urgent')">+</button>
+                </div>
+                <div class="tasks-list" id="tasks-important-not-urgent"></div>
+            </div>
+
+            <!-- 第三象限：紧急但不重要 -->
+            <div class="quadrant urgent-not-important">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        🟠 紧急但不重要
+                        <span class="quadrant-count" id="count-urgent-not-important">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="quadrantManager.showAddTaskModal('urgent-not-important')">+</button>
+                </div>
+                <div class="tasks-list" id="tasks-urgent-not-important"></div>
+            </div>
+
+            <!-- 第四象限：既不重要也不紧急 -->
+            <div class="quadrant not-urgent-not-important">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        ⚪ 既不重要也不紧急
+                        <span class="quadrant-count" id="count-not-urgent-not-important">0</span>
+                    </div>
+                    <button class="add-task-btn" onclick="quadrantManager.showAddTaskModal('not-urgent-not-important')">+</button>
+                </div>
+                <div class="tasks-list" id="tasks-not-urgent-not-important"></div>
+            </div>
+        </div>
+
+        <!-- 设置面板 -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">设置选项</div>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <h4>显示设置</h4>
+                    <div class="setting-item">
+                        <span class="setting-label">显示已完成任务</span>
+                        <input type="checkbox" id="showCompleted" class="setting-control" onchange="quadrantManager.updateSettings()">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">显示任务描述</span>
+                        <input type="checkbox" id="showDescription" class="setting-control" checked onchange="quadrantManager.updateSettings()">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">显示截止日期</span>
+                        <input type="checkbox" id="showDeadline" class="setting-control" checked onchange="quadrantManager.updateSettings()">
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h4>提醒设置</h4>
+                    <div class="setting-item">
+                        <span class="setting-label">提前提醒天数</span>
+                        <select id="reminderDays" class="setting-control" onchange="quadrantManager.updateSettings()">
+                            <option value="1">1天</option>
+                            <option value="3" selected>3天</option>
+                            <option value="7">7天</option>
+                            <option value="14">14天</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">紧急任务提醒</span>
+                        <input type="checkbox" id="urgentReminder" class="setting-control" checked onchange="quadrantManager.updateSettings()">
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h4>排序设置</h4>
+                    <div class="setting-item">
+                        <span class="setting-label">任务排序方式</span>
+                        <select id="sortMethod" class="setting-control" onchange="quadrantManager.updateSettings()">
+                            <option value="deadline">按截止日期</option>
+                            <option value="created">按创建时间</option>
+                            <option value="updated">按更新时间</option>
+                            <option value="title">按标题</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h4>数据管理</h4>
+                    <div class="setting-item">
+                        <span class="setting-label">自动保存</span>
+                        <input type="checkbox" id="autoSave" class="setting-control" checked onchange="quadrantManager.updateSettings()">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">清理已完成任务</span>
+                        <button class="btn btn-secondary" onclick="quadrantManager.cleanCompletedTasks()" style="font-size: 11px; padding: 4px 8px;">清理</button>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">数据备份恢复</span>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-primary" onclick="quadrantManager.restoreFromBackup()" style="font-size: 11px; padding: 4px 8px;">恢复</button>
+                            <button class="btn btn-secondary" onclick="quadrantManager.cleanOldBackups()" style="font-size: 11px; padding: 4px 8px;">清理旧备份</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">重置所有数据</span>
+                        <button class="btn btn-secondary" onclick="quadrantManager.resetTasks()" style="font-size: 11px; padding: 4px 8px;">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 任务添加/编辑模态框 -->
+    <div class="task-modal" id="taskModal">
+        <div class="task-modal-content">
+            <div class="task-modal-header" id="modalTitle">添加新任务</div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label class="form-label">任务标题 *</label>
+                    <input type="text" class="form-input" id="taskTitle" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">任务描述</label>
+                    <textarea class="form-textarea" id="taskDescription" placeholder="详细描述、备注或相关信息..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">所属象限</label>
+                        <select class="form-select" id="taskQuadrant">
+                            <option value="urgent-important">🔴 重要且紧急</option>
+                            <option value="important-not-urgent">🟡 重要但不紧急</option>
+                            <option value="urgent-not-important">🟠 紧急但不重要</option>
+                            <option value="not-urgent-not-important">⚪ 既不重要也不紧急</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">截止日期</label>
+                        <input type="date" class="form-input" id="taskDeadline">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">报警阈值</label>
+                        <select class="form-select" id="taskAlertThreshold">
+                            <option value="1">截止前1天提醒</option>
+                            <option value="2">截止前2天提醒</option>
+                            <option value="3" selected>截止前3天提醒</option>
+                            <option value="5">截止前5天提醒</option>
+                            <option value="7">截止前1周提醒</option>
+                            <option value="14">截止前2周提醒</option>
+                            <option value="30">截止前1个月提醒</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">优先级</label>
+                        <select class="form-select" id="taskPriority">
+                            <option value="low">低</option>
+                            <option value="medium" selected>中</option>
+                            <option value="high">高</option>
+                            <option value="critical">紧急</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="quadrantManager.hideTaskModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        const { ipcRenderer } = require('electron');
+        
+        // 应用主题到body
+        function applyTheme(theme) {
+            // 清除所有现有主题类
+            document.body.className = document.body.className.replace(/theme-\w+/g, '');
+            // 添加新主题类和窗口标识类
+            document.body.className += ` theme-${theme} quadrant-window`;
+            console.log(`四象限窗口主题已切换至: ${theme}`);
+        }
+        
+        // Listen for theme updates
+        ipcRenderer.on('theme-changed', (event, theme) => {
+            applyTheme(theme);
+        });
+        
+        // Request current theme
+        ipcRenderer.invoke('get-current-theme').then(theme => {
+            applyTheme(theme || 'system');
+        }).catch(error => {
+            console.error('获取当前主题失败:', error);
+            applyTheme('system');
+        });
+    </script>
+    <script src="quadrant-manager.js"></script>
+</body>
+</html>

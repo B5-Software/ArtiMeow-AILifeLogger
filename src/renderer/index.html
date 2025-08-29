@@ -24,10 +24,19 @@
                 <span class="title-sub">AI Life Logger</span>
             </div>
         </div>
-        <div class="titlebar-center" id="titlebarStatus">
-            <!-- 状态区域 -->
+        <div class="titlebar-center">
+            <!-- 中央区域预留 -->
         </div>
         <div class="titlebar-right">
+            <div class="titlebar-reminder-section">
+                <div id="snoozeCountdown" class="reminder-countdown snooze" style="display:none;margin-right:6px;"></div>
+                <div id="reminderCountdown" class="reminder-countdown" style="display: none;">
+                    <!-- 倒计时显示 -->
+                </div>
+                <div id="titlebarStatus" class="titlebar-status">
+                    <!-- 任务提醒状态 -->
+                </div>
+            </div>
             <button class="titlebar-btn minimize" id="btnMin" title="最小化">
                 <svg width="12" height="12" viewBox="0 0 12 12">
                     <rect x="2" y="5.5" width="8" height="1" fill="currentColor"/>
@@ -72,6 +81,19 @@
                         <input type="date" id="dateFilter" class="date-input">
                         <button class="filter-btn" id="todayBtn">今天</button>
                         <button class="filter-btn" id="showAllBtn">显示全部</button>
+                    </div>
+                    <div class="type-filter">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-type="all" id="allEntriesTab">
+                                全部
+                            </button>
+                            <button class="filter-tab" data-type="record" id="recordsTab">
+                                记录
+                            </button>
+                            <button class="filter-tab" data-type="summary" id="summariesTab">
+                                总结
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -137,6 +159,10 @@
                         </div>
                     </div>
                     <div class="entry-actions">
+                        <button class="action-btn secondary" id="quadrantBtn" title="四象限管理">
+                            <i class="fas fa-table"></i>
+                            <span>四象限</span>
+                        </button>
                         <button class="action-btn secondary" id="aiAssistBtn" title="AI 助手">
                             <i class="fas fa-robot"></i>
                             <span>AI助手</span>
@@ -230,10 +256,14 @@ AI 助手可以帮助您：
                     <!-- AI 工作台面板 -->
                     <div class="ai-workspace-pane" id="aiWorkspacePane">
                         <div class="ai-workspace-header">
+                            <div class="deadline-status" id="mainDeadlineStatus">
+                                <!-- 截止日期状态显示 -->
+                            </div>
                             <div class="ai-work-actions">
                                 <button id="btnGenDailySummary" class="btn-small">生成今日整理</button>
-                                <button id="btnGenWeeklySummary" class="btn-small">一键生成周总结 & 计划</button>
+                                <button id="btnGenMultiDaySummary" class="btn-small">多日总结 & 工作排序</button>
                                 <button id="btnInsertMermaid" class="btn-small">智能生成 Mermaid 图</button>
+                                <button id="btnOpenQuadrant" class="btn-small" style="background: linear-gradient(45deg, #e74c3c, #f39c12); color: white;">四象限管理</button>
                             </div>
                             <div class="ai-work-status" id="aiWorkStatus" style="display: none;">
                                 <div class="working-indicator">
@@ -267,7 +297,6 @@ AI 助手可以帮助您：
                 </div>
             </div>
         </div>
-    </div>
     
     <!-- AI 助手对话框 -->
     <div class="ai-dialog" id="aiDialog">
@@ -324,6 +353,7 @@ AI 助手可以帮助您：
             <i class="fas fa-trash"></i> 删除
         </div>
     </div>
+    
     <!-- 设置模态 -->
     <div class="settings-modal" id="settingsModal" style="display:none;">
         <div class="settings-backdrop" id="settingsBackdrop"></div>
@@ -334,6 +364,7 @@ AI 助手可以帮助您：
             </div>
                 <div class="settings-tabs">
                 <button class="settings-tab-btn active" data-tab="ai">AI 配置</button>
+                <!-- <button class="settings-tab-btn" data-tab="wallpaper">壁纸</button> -->
                 <button class="settings-tab-btn" data-tab="appearance">外观</button>
                 <button class="settings-tab-btn" data-tab="about">关于</button>
             </div>
@@ -432,6 +463,19 @@ AI 助手可以帮助您：
                         <div class="setting-group"><label class="setting-label"><input type="checkbox" id="wordWrap" checked> 自动换行</label></div>
                     </div>
                 </div>
+                <!--
+                <div class="settings-tab" id="wallpaperTab">
+                    <div class="settings-section">
+                        <h3>壁纸（桌面）</h3>
+                        <div class="setting-group">
+                            <label class="setting-label"><input type="checkbox" id="wallpaperEnabled"> 启用四象限壁纸（应用启动时自动应用）</label>
+                        </div>
+                        <div class="setting-group">
+                            <p class="setting-note">壁纸自动获取系统分辨率并以非交互方式实时更新四象限内容。可在此启用或禁用。</p>
+                        </div>
+                    </div>
+                </div>
+                -->
                 <div class="settings-tab" id="aboutTab">
                     <div class="about-section">
                         <div class="about-header"><div class="about-icon"><img src="../assets/icon.png" alt="ArtiMeow" class="about-icon-image"></div><div class="about-title"><h2 id="appName">ArtiMeow AI Life Logger</h2><p id="appVersion">版本 1.0.0</p></div></div>
@@ -469,7 +513,7 @@ AI 助手可以帮助您：
     <script src="lib/highlight/highlight.min.js"></script>
     <script src="lib/mermaid/mermaid.min.js"></script>
     <script src="scripts/storage.js"></script>
-    <script src="scripts/settings-fixed.js"></script>
+    <script src="scripts/settings.js"></script>
     <script src="scripts/themes.js"></script>
     <script src="scripts/main.js"></script>
     <script src="scripts/ai-assistant.js"></script>

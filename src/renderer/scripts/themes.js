@@ -19,17 +19,22 @@ class ThemeManager {
     
     setTheme(theme) {
         if (!this.themes.includes(theme)) {
-            console.warn(`未知主题: ${theme}`);
-            return;
+            console.warn(`未知主题: ${theme}, 使用默认主题 system`);
+            theme = 'system';
         }
         
         this.currentTheme = theme;
         this.updateThemeDisplay();
         this.updateThemeIcon();
         
-        // 通知主进程更新原生主题
-        if (window.electronAPI) {
-            window.electronAPI.setTheme(theme);
+        // 通知主进程更新主题并同步到其他窗口
+        if (window.require) {
+            try {
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.invoke('set-theme', theme);
+            } catch (error) {
+                console.error('主题同步失败:', error);
+            }
         }
         
         // 保存到本地存储
@@ -37,6 +42,8 @@ class ThemeManager {
         const settings = storage.loadSettings();
         settings.theme = theme;
         storage.saveSettings(settings);
+        
+        console.log(`主题管理器：主题已切换至 ${theme}`);
     }
     
     getTheme() {
@@ -54,19 +61,19 @@ class ThemeManager {
         const body = document.body;
         const effectiveTheme = this.getEffectiveTheme();
         
-        // 移除所有主题类
-        this.themes.forEach(theme => {
-            body.classList.remove(`theme-${theme}`);
-        });
+        // 清除所有现有主题类
+        body.className = body.className.replace(/theme-\w+/g, '');
         
-        // 应用当前主题
-        body.classList.add(`theme-${this.currentTheme}`);
+        // 应用当前主题类
+        body.className += ` theme-${this.currentTheme}`;
         
         // 更新CSS变量（如果需要）
         this.updateCSSVariables(effectiveTheme);
         
         // 触发主题变化事件
         this.dispatchThemeChangeEvent(effectiveTheme);
+        
+        console.log(`主题显示已更新: ${this.currentTheme} (有效主题: ${effectiveTheme})`);
     }
     
     updateCSSVariables(theme) {

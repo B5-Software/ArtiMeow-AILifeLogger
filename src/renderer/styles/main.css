@@ -42,6 +42,74 @@ body {
     gap: 12px; 
     flex: 1;
 }
+.titlebar-center {
+    flex: 2;
+    justify-content: center;
+}
+.titlebar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 标题栏提醒区域样式 */
+.titlebar-reminder-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 8px;
+}
+
+.reminder-countdown {
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.titlebar-status {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 标题栏状态样式 */
+.titlebar-status-text {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.titlebar-status-text.success {
+    color: #28a745;
+}
+
+.titlebar-deadline-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 0 2px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.titlebar-deadline-badge.urgent {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.titlebar-deadline-badge.important {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    box-shadow: 0 2px 4px rgba(253, 126, 20, 0.3);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
 
 .app-icon {
     position: relative;
@@ -165,6 +233,46 @@ body {
     border-bottom: 1px solid var(--border-color);
     background: var(--secondary-bg);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.deadline-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.deadline-status.has-urgent {
+    color: #dc3545;
+}
+
+.deadline-status.has-important {
+    color: #fd7e14;
+}
+
+.deadline-badge {
+    background: var(--accent-color);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.deadline-badge.urgent {
+    background: #dc3545;
+}
+
+.deadline-badge.important {
+    background: #fd7e14;
+}
+
+.deadline-badge.normal {
+    background: #28a745;
 }
 .ai-work-actions { 
     display: flex; 
@@ -590,6 +698,48 @@ body.ai-working .tab-btn {
     transform: scale(1.02);
 }
 
+/* 类型过滤器样式 */
+.type-filter {
+    margin-top: 12px;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--secondary-bg);
+    border-radius: 10px;
+    padding: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.filter-tab {
+    flex: 1;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.filter-tab:hover {
+    background: var(--hover-bg);
+    color: var(--text-color);
+}
+
+.filter-tab.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 4px rgba(79, 195, 247, 0.3);
+}
+
 .entries-section {
     flex: 1;
 }
@@ -663,6 +813,38 @@ body.ai-working .tab-btn {
 
 .entry-item.active::before {
     width: 4px;
+}
+
+/* 记录类型样式 */
+.entry-type-icon {
+    margin-right: 8px;
+    font-size: 12px;
+    opacity: 0.7;
+    color: var(--text-secondary);
+}
+
+.entry-item.entry-summary {
+    border-left: 3px solid var(--primary-color);
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(79, 195, 247, 0.05) 100%);
+}
+
+.entry-item.entry-summary .entry-type-icon {
+    color: var(--primary-color);
+    opacity: 1;
+}
+
+.entry-item.entry-summary .entry-title {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.entry-title {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    line-height: 1.4;
 }
 
 .sidebar-footer {
